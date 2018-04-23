@@ -114,16 +114,11 @@ def resumo_dataset(r_treino):
     
 def plota_importancias(importances):
     #Ordena os valores de maior ao menor, filtra só as variáveis com valores de importância acima de 0.01
-    importances = importances.sort_values('importance',ascending=False).set_index('feature')
+    importances = importances.sort_values('importance',ascending=False)
 #    importances = importances[(importances.T >= valor_min_influencia).any()]
     importances.plot.bar()
 
 def monta_dataset_selection(dataset, colunas):
     
-    df = pd.DataFrame(dataset[colunas], columns = colunas)
-#    for col in dataset.columns:
-#        print(col)
-#        if col in colunas:
-#            df = dataset[col]
-    
+    df = pd.DataFrame(dataset[colunas], columns = colunas)    
     return df
