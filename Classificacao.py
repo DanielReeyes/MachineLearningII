@@ -17,14 +17,16 @@ from sklearn.metrics import confusion_matrix
 from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import f_classif
 from functions import *
+from sklearn.ensemble import VotingClassifier
+from sklearn.naive_bayes import GaussianNB
 
 #Setando o caminho dos arquivos de dados
 os.chdir('/Users/danielreyes/Documents/Pós/Machine Learning II/T1/Data')
 
 #Parâmetros para utilização do Script
-usa_dados_balanceados = True
-usa_selection_feature = True
-usa_exploracao_variaveis = True
+usa_dados_balanceados = False
+usa_selection_feature = False
+usa_exploracao_variaveis = False
 #variável que guardará o valor minimo aceitável de influência na classe predita (selection feature)
 valor_min_influencia = 0.01
 
@@ -55,6 +57,7 @@ if usa_dados_balanceados:
 #Declaração dos modelos usados
 modelo_dt = tree.DecisionTreeClassifier()
 modelo_rna = MLPClassifier()
+modelo_nb = GaussianNB()
 
 modelo_dt.fit(d_treino, r_treino)
 
@@ -99,3 +102,22 @@ print("Acurácia modelo RNA.: " + str(acuracia_rna))
 
 matriz_confusao_rna = confusion_matrix(r_teste, predicoes_rna)
 print(matriz_confusao_rna)
+
+print("\n\n=====================\n\n")
+
+modelo_nb.fit(d_treino, r_treino)
+predicoes_nb = modelo_nb.predict(d_teste)
+acuracia_nb = accuracy_score(r_teste, predicoes_nb)
+print("Acurácia modelo NB.: " + str(acuracia_nb))
+
+matriz_confusao_nb = confusion_matrix(r_teste, predicoes_nb)
+print(matriz_confusao_nb)
+
+print("\n\n=====================\n\n")
+
+ensClassifier = VotingClassifier(estimators=[('rna', modelo_rna), ('dt', modelo_dt), ('nb', modelo_nb)], voting='hard')
+ensClassifier = ensClassifier.fit(d_treino, r_treino)
+
+predicoes_ensemble = ensClassifier.predict(d_teste)
+acuracia_ensemble = accuracy_score(r_teste, predicoes_ensemble)
+print("Acurácia ensemble.: " + str(acuracia_ensemble))
