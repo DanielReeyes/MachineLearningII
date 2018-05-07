@@ -21,7 +21,7 @@ from pandas import DataFrame
 RANGE_N = 11.0
 TAM_PASSO = 0.01
 DIVISOR = 100
-QT_PASSO_PRED = 1
+QT_PASSO_PRED = 100
 TAM_JANELA = 15
 
 #Função para criar um data set e posteriormente dividi-lo em treino e teste
@@ -119,8 +119,9 @@ df_pontos.columns = monta_cabecalho_janela()
 df_pontos.drop(df_pontos.head(TAM_JANELA).index,inplace=True)
 
 #Cria o modelo e seta os parâmetros dele
-rna = MLPRegressor(hidden_layer_sizes=(100, 100), 
+rna = MLPRegressor(hidden_layer_sizes=(100, 100, 100,100), 
                    activation='tanh', 
+                   solver='adam',
                    early_stopping=True)
 
 #Cria um dataframe apenas com as variáveis, excluindo os rótulos do momento 'x' a ser predito posteriormente

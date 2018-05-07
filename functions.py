@@ -10,6 +10,9 @@ import numpy as np
 #bibliotecas para gráficos
 import matplotlib.pyplot as plt 
 from collections import Counter
+from sklearn.metrics import precision_recall_fscore_support as score
+from sklearn.metrics import classification_report
+from sklearn.metrics import accuracy_score
 
 
 def parse_columns(x):
@@ -32,32 +35,32 @@ def monta_dataset_balanceado(x, x_label):
     qt_classe_min = min(WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING)
     
     x['label'] = x_label
-    print(x.columns)
-    print('WALKING: ' + str(WALKING))
-    print('WALKING_UPSTAIRS: ' + str(WALKING_UPSTAIRS))
-    print('WALKING_DOWNSTAIRS: ' + str(WALKING_DOWNSTAIRS))
-    print('SITTING: ' + str(SITTING))
-    print('STANDING: ' + str(STANDING))
-    print('LAYING: ' + str(LAYING))
-    print("Quantidade de dados da classe minima: " + str(qt_classe_min))
+#    print(x.columns)
+#    print('WALKING: ' + str(WALKING))
+#    print('WALKING_UPSTAIRS: ' + str(WALKING_UPSTAIRS))
+#    print('WALKING_DOWNSTAIRS: ' + str(WALKING_DOWNSTAIRS))
+#    print('SITTING: ' + str(SITTING))
+#    print('STANDING: ' + str(STANDING))
+#    print('LAYING: ' + str(LAYING))
+#    print("Quantidade de dados da classe minima: " + str(qt_classe_min))
     
     dados_WALKING = x[x['label'] == 1]
-    print(dados_WALKING.shape)
+#    print(dados_WALKING.shape)
     
     dados_WALKING_UPSTAIRS = x[x['label'] == 2]
-    print(dados_WALKING_UPSTAIRS.shape)
+#    print(dados_WALKING_UPSTAIRS.shape)
     
     dados_WALKING_DOWNSTAIRS = x[x['label'] == 3]
-    print(dados_WALKING_DOWNSTAIRS.shape)
+#    print(dados_WALKING_DOWNSTAIRS.shape)
     
     dados_SITTING = x[x['label'] == 4]
-    print(dados_SITTING.shape)
+#    print(dados_SITTING.shape)
     
     dados_STANDING = x[x['label'] == 5]
-    print(dados_STANDING.shape)
+#    print(dados_STANDING.shape)
     
     dados_LAYING = x[x['label'] == 6]
-    print(dados_LAYING.shape)
+#    print(dados_LAYING.shape)
     
     dados_WALKING = dados_WALKING.head(qt_classe_min)
     dados_WALKING_UPSTAIRS = dados_WALKING_UPSTAIRS.head(qt_classe_min)
@@ -66,18 +69,18 @@ def monta_dataset_balanceado(x, x_label):
     dados_STANDING = dados_STANDING.head(qt_classe_min)
     dados_LAYING = dados_LAYING.head(qt_classe_min)
     
-    print("\n\n==============DEPOIS DE BALANCEAR:\n\n")
-    print(dados_WALKING.shape)
-    print(dados_WALKING_UPSTAIRS.shape)
-    print(dados_WALKING_DOWNSTAIRS.shape)
-    print(dados_SITTING.shape)
-    print(dados_STANDING.shape)
-    print(dados_LAYING.shape)
+#    print("\n\n==============DEPOIS DE BALANCEAR:\n\n")
+#    print(dados_WALKING.shape)
+#    print(dados_WALKING_UPSTAIRS.shape)
+#    print(dados_WALKING_DOWNSTAIRS.shape)
+#    print(dados_SITTING.shape)
+#    print(dados_STANDING.shape)
+#    print(dados_LAYING.shape)
     
     frames = [dados_WALKING, dados_WALKING_UPSTAIRS, dados_WALKING_DOWNSTAIRS, dados_SITTING, dados_STANDING, dados_LAYING]
     df_balanceado = pd.concat(frames)
     
-    print("\n\n==============DF DEPOIS DE BALANCEAR:\n\n")
+    print("\n==============DF DEPOIS DE BALANCEAR:\n")
     print(df_balanceado.shape)
     del(x['label'])
     
@@ -111,14 +114,13 @@ def resumo_dataset(r_treino):
     plt.title(tituloGrafico)
     plt.show()
     fig.savefig('plot.png', dpi=(200))
-    
-def plota_importancias(importances):
-    #Ordena os valores de maior ao menor, filtra só as variáveis com valores de importância acima de 0.01
-    importances = importances.sort_values('importance',ascending=False)
-#    importances = importances[(importances.T >= valor_min_influencia).any()]
-    importances.plot.bar()
 
 def monta_dataset_selection(dataset, colunas):
     
     df = pd.DataFrame(dataset[colunas], columns = colunas)    
     return df
+
+def relatorio(y_real, y_predito, cabecalho, modelo, acuracia):
+    print("Acurácia modelo " + modelo + " .: " + str(acuracia) + "\n")
+    print(classification_report(y_real, y_predito, target_names=cabecalho))
+    print("========================")
