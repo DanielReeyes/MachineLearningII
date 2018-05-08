@@ -225,9 +225,6 @@ for i in range(QT_PASSO_PRED):
 #    print("Guarda em uma lista para poder mensurar o modelo:")
     predicoes_passos.append(valor_predito)
 
-#df_teste = df_teste.drop(df_teste.index[0])
-    
-#plota_grafico_2(labels.tail(QT_PASSO_PRED),
 if(QT_PASSO_PRED == 1):
     plota_grafico_1passo(labels.tail(QT_PASSO_PRED), 
                          predicoes_passos, 
